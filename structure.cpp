@@ -52,18 +52,7 @@ void Tree::printLinks(int spines, int leaves){
         cout<<allLinks[i]->leafNode<<endl;
     }
 }
-/*
-Track::Track(float numberOfFlows){
-    allFlows.resize(numberOfFlows);
-    for(int i=0; i<numberOfFlows; i++){
-        allFlows[i]=new Flow;
-        allFlows[i]->linkIds[0]="empty";
-        allFlows[i]->linkIds[1]="empty";
-        allFlows[i]->throughput=0.0;
-    }
-}
-*/
-void Track::findFlow(int srcLeaf, int dstLeaf, int leaves, int spines){
+
     /*
     1. Find links from sourceLeaf to all spines (equal to no. of spines).
         a. Use sourceLeaf value to find index in leafArray.
@@ -78,7 +67,6 @@ void Track::findFlow(int srcLeaf, int dstLeaf, int leaves, int spines){
     5. Choose randomly one path from all valid paths.
     6. Add this selected path to allFlows.
     */
-}
 
 void Track::storeValidFlow(int spines,vector<string> srcPath,vector<string> destPath){
     
@@ -91,7 +79,7 @@ void Track::storeValidFlow(int spines,vector<string> srcPath,vector<string> dest
     selectedFlow->linkIds[1]=destPath[selectedPathIndex];
 
     allFlows.push_back(selectedFlow);
-    cout<<"All Flows:"<<endl;
+    cout<<"All Flows: "<<allFlows.size()<<endl;
     for(int i=0; i<allFlows.size(); i++){
         cout<<allFlows[i]->linkIds[0]<<" ";
         cout<<allFlows[i]->linkIds[1]<<" ";
@@ -130,7 +118,6 @@ void Tree::findLinks(int sourceLeaf, int destLeaf, int leaves, int spines, int n
     for(int i=0; i<srcPath.size(); i++){
         cout<<srcPath[i]<<" "<<destPath[i]<<endl;
     }
-
-    Track flowTracker;
+    static Track flowTracker;
     flowTracker.storeValidFlow(spines, srcPath, destPath);                          //4,5,6
 }

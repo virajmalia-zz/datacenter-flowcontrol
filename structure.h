@@ -13,12 +13,9 @@ private:
     vector<Flow*> allFlows;
 
 public:
-    //Track(float);
-    void addFlow();
+    Track(){};
     void printFlows();
     void storeValidFlow(int,vector<string>,vector<string>);
-    void findFlow(int,int,int,int);
-
 };
 
 class Tree{
@@ -40,6 +37,4 @@ public:
     void addLink(int, int, int*, int*, int);
     void printLinks(int, int);
     void findLinks(int, int, int, int, int);
-    friend void Track::findFlow(int,int,int,int);
-
 };

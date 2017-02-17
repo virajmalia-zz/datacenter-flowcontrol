@@ -39,6 +39,7 @@ int main(){
     //////////////////////////////////////////// Phase 2 - Assign Random Flows ///////////////////////////////////////////////////
     int numberOfFlows=flowFraction*leaves*spines;
     int sourceLeaf, destinationLeaf;
+    
 
     srand(time(NULL));                                                      //Random seed generator
     cout<<"Seed planted"<<endl;
