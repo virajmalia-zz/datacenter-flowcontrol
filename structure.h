@@ -4,37 +4,36 @@
 using namespace std;
 
 class Track{
-private:
+public:
     struct Flow{
-        string linkIds[2];
+        string linkId[2];
         float throughput;
     };
 
     vector<Flow*> allFlows;
 
-public:
     Track(){};
     void printFlows();
     void storeValidFlow(int,vector<string>,vector<string>);
+    void checkLinkThroughput(Track::Flow*);
 };
 
 class Tree{
-private:
+public:
     struct Link{
         string id;
         int spineId;
         int leafId;
-        float weightF;
-        float weightB;        
-        int* spineNode;
-        int* leafNode;
+        float weightUp;
+        float weightDown;
     };
 
-    vector<Link*> allLinks;
+    
 
-public:
     Tree(int, int);
     void addLink(int, int, int*, int*, int);
     void printLinks(int, int);
     void findLinks(int, int, int, int, int);
+    friend void checkLinkThroughput(Track::Flow*);
 };
+vector<Tree::Link*> allLinks;

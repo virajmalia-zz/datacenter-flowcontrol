@@ -1,6 +1,7 @@
 #include<iostream>
 #include<cstring>
 #include<sstream>
+//#include<string.h>
 
 #include "structure.h"
 
@@ -13,10 +14,8 @@ Tree::Tree(int spines, int leaves){
         allLinks[i]->id="empty";
         allLinks[i]->spineId=-1;
         allLinks[i]->leafId=-1;
-        allLinks[i]->weightF=0.0;
-        allLinks[i]->weightB=0.0;
-        allLinks[i]->spineNode=NULL;
-        allLinks[i]->leafNode=NULL;
+        allLinks[i]->weightUp=1.0;
+        allLinks[i]->weightDown=0.0;
     }
 }
 
@@ -35,21 +34,18 @@ void Tree::addLink(int spineIndex, int leafIndex, int* spineArray, int* leafArra
     allLinks[leaves*spineIndex+leafIndex]->id=leafString;        //Concatenate spineIndex and leafIndex to form Link ID (S-L)
     allLinks[leaves*spineIndex+leafIndex]->spineId=spineIndex;
     allLinks[leaves*spineIndex+leafIndex]->leafId=leafIndex;
-    allLinks[leaves*spineIndex+leafIndex]->weightF=0.0;
-    allLinks[leaves*spineIndex+leafIndex]->weightB=0.0;
-    allLinks[leaves*spineIndex+leafIndex]->spineNode=&spineArray[spineIndex];
-    allLinks[leaves*spineIndex+leafIndex]->leafNode=&leafArray[leafIndex];
+    allLinks[leaves*spineIndex+leafIndex]->weightUp=1.0;
+    allLinks[leaves*spineIndex+leafIndex]->weightDown=1.0;
 }
 
 void Tree::printLinks(int spines, int leaves){
-    for(int i=0; i<spines*leaves; i++){                          //Spines are assumed from 0,1,...,spines //Leaves are assumed from 0,1,...,leaves
+    for(int i=0; i<spines*leaves; i++){                          //Spines are assumed from 0,1,...,spines //Leaves are assumed                                                                  //from 0,1,...,leaves
+        cout.precision(5);
         cout<<allLinks[i]->id<<" ";                              //Concatenate spineIndex and leafIndex to form Link ID
         cout<<allLinks[i]->spineId<<" ";
         cout<<allLinks[i]->leafId<<" ";
-        cout<<allLinks[i]->weightF<<" ";
-        cout<<allLinks[i]->weightB<<" ";
-        cout<<allLinks[i]->spineNode<<" ";
-        cout<<allLinks[i]->leafNode<<endl;
+        cout<<fixed<<allLinks[i]->weightUp<<" ";
+        cout<<fixed<<allLinks[i]->weightDown<<endl;
     }
 }
 
@@ -75,16 +71,22 @@ void Track::storeValidFlow(int spines,vector<string> srcPath,vector<string> dest
 
     Track::Flow* selectedFlow = new Flow;
 
-    selectedFlow->linkIds[0]=srcPath[selectedPathIndex];
-    selectedFlow->linkIds[1]=destPath[selectedPathIndex];
+    selectedFlow->linkId[0]=srcPath[selectedPathIndex];
+    selectedFlow->linkId[1]=destPath[selectedPathIndex];
+    selectedFlow->throughput=0.0;
 
-    allFlows.push_back(selectedFlow);
+    allFlows.push_back(selectedFlow);                   //Add flow to list
+
+    checkLinkThroughput(selectedFlow);                  //Static throughput check
+    
     cout<<"All Flows: "<<allFlows.size()<<endl;
     for(int i=0; i<allFlows.size(); i++){
-        cout<<allFlows[i]->linkIds[0]<<" ";
-        cout<<allFlows[i]->linkIds[1]<<" ";
-        cout<<allFlows[i]->throughput<<endl;
+        cout.precision(5);
+        cout<<allFlows[i]->linkId[0]<<" ";
+        cout<<allFlows[i]->linkId[1]<<" ";
+        cout<<fixed<<allFlows[i]->throughput<<endl;
     }
+    cout<<endl;
 }
 
 void Tree::findLinks(int sourceLeaf, int destLeaf, int leaves, int spines, int numberOfFlows){  // 1,2,3
@@ -114,10 +116,43 @@ void Tree::findLinks(int sourceLeaf, int destLeaf, int leaves, int spines, int n
                                 *leaves+k]->id;
         }
     }
+
     cout<<"src and dest:"<<endl;
     for(int i=0; i<srcPath.size(); i++){
         cout<<srcPath[i]<<" "<<destPath[i]<<endl;
     }
     static Track flowTracker;
     flowTracker.storeValidFlow(spines, srcPath, destPath);                          //4,5,6
+}
+
+void Track::checkLinkThroughput(Track::Flow* selectedFlow){
+    cout<<"Checking Throughput"<<endl;
+    int srcForwardCount=0,destForwardCount=0;
+  
+        for(int i=0; i<allFlows.size(); i++){
+            if (strcmp(selectedFlow->linkId[0].c_str(),allFlows[i]->linkId[0].c_str())==0){
+                //if srcPath id is same, change srclink weight.
+                srcForwardCount+=1;
+                cout<<"Source Equal, New throughput"<<endl;
+                cout<<srcForwardCount<<endl;
+                for(int j=0; j<allLinks.size(); j++){
+                    if(strcmp(allLinks[j]->id.c_str(),selectedFlow->linkId[0].c_str())==0){
+                        allLinks[j]->weightUp = (float)1.0/(float)srcForwardCount;
+                    }
+                }
+            }
+            if(strcmp(selectedFlow->linkId[1].c_str(),allFlows[i]->linkId[1].c_str())==0){
+                //if destPath id is same, change destlink weight.
+                destForwardCount+=1;
+                cout<<"Dest Equal"<<endl;
+                cout<<destForwardCount<<endl;
+                for(int k=0; k<allLinks.size(); k++){
+                    if(strcmp(allLinks[k]->id.c_str(),selectedFlow->linkId[1].c_str())==0){
+                        allLinks[k]->weightDown = (float)1.0/(float)destForwardCount;
+                    }
+                }
+            }
+        }
+    srcForwardCount=1;
+    destForwardCount=1;
 }

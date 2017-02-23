@@ -38,21 +38,25 @@ int main(){
 
     //////////////////////////////////////////// Phase 2 - Assign Random Flows ///////////////////////////////////////////////////
     int numberOfFlows=flowFraction*leaves*spines;
-    int sourceLeaf, destinationLeaf;
-    
+    int sourceLeaf, destinationLeaf;    
 
     srand(time(NULL));                                                      //Random seed generator
     cout<<"Seed planted"<<endl;
     for(int i=0; i<numberOfFlows; i++){                                     //For each flow
         sourceLeaf = rand()%leaves;                                         //Select random sourceLeaf
         destinationLeaf = rand()%leaves;                                    //Select random destinationLeaf
-        separateTree.findLinks(sourceLeaf,destinationLeaf,leaves,spines,numberOfFlows); //Find flow from sourceLeaf to                                                                                            //destinationLeaf via a spine randomly
+        while(sourceLeaf==destinationLeaf){
+            sourceLeaf = rand()%leaves;                                         //Select random sourceLeaf
+            destinationLeaf = rand()%leaves;
+        }
+        separateTree.findLinks(sourceLeaf,destinationLeaf,leaves,spines,numberOfFlows); //Find flow from sourceLeaf to                                                                                            //destinationLeaf via a spine                                                                                              //randomly
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////// Phase 3 - Calculate Throughput ////////////////////////////////////////////////////
-
+    //Static Throughput calculated in findLinks function above
+    separateTree.printLinks(spines,leaves);
 
 
 
