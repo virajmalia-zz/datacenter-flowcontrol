@@ -3,6 +3,8 @@
 
 using namespace std;
 
+extern int nextSpine;
+
 class Track{
 public:
     struct Flow{

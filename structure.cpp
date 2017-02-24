@@ -7,6 +7,8 @@
 
 using namespace std;
 
+int nextSpine=-1;
+
 Tree::Tree(int spines, int leaves){
     allLinks.resize(spines*leaves,0);
     for(int i=0; i<spines*leaves; i++){
@@ -83,8 +85,10 @@ void printFlows(){
     */
 
 void Track::storeValidFlow(int spines,vector<string> srcPath,vector<string> destPath){
-    
-    int selectedPathIndex = rand()%spines;
+    nextSpine++;
+    if(nextSpine == spines)
+        nextSpine = 0;    
+    int selectedPathIndex = nextSpine;
     cout<<"SelectedPathIndex: "<<selectedPathIndex<<endl;
 
     Track::Flow* selectedFlow = new Flow;
