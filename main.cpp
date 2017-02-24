@@ -11,8 +11,8 @@ int main(){
     int leaves, spines; 
     float flowFraction, capacityFraction;                                   //Initial inputs
 
-    cout<<"Enter Leaves, Spines, flowFraction, capacityFraction"<<endl;
-    cin>>leaves>>spines>>flowFraction>>capacityFraction;
+    cout<<"Enter Spines, Leaves, flowFraction, capacityFraction"<<endl;
+    cin>>spines>>leaves>>flowFraction;
 
     int spineArray[spines], leafArray[leaves];                              //Spine and leaf Arrays
 
@@ -55,8 +55,11 @@ int main(){
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////// Phase 3 - Calculate Throughput ////////////////////////////////////////////////////
+    
     //Static Throughput calculated in findLinks function above
     separateTree.printLinks(spines,leaves);
+    findSmallest();
+    //separateTree.printLinks(spines,leaves);
 
 
 

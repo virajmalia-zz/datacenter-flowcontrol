@@ -10,10 +10,8 @@ public:
         float throughput;
     };
 
-    vector<Flow*> allFlows;
-
     Track(){};
-    void printFlows();
+    //void printFlows();
     void storeValidFlow(int,vector<string>,vector<string>);
     void checkLinkThroughput(Track::Flow*);
 };
@@ -26,6 +24,8 @@ public:
         int leafId;
         float weightUp;
         float weightDown;
+        float availableUp;
+        float availableDown;
     };
 
     
@@ -37,3 +37,4 @@ public:
     friend void checkLinkThroughput(Track::Flow*);
 };
 vector<Tree::Link*> allLinks;
+vector<Track::Flow*> allFlows;
